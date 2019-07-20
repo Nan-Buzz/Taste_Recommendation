@@ -67,15 +67,15 @@ sys.stdout.flush()
 print("File processing completed.")
 
 
-file_name_list = os.listdir(dir_name_out)
-data = []
-for ii1 in file_name_list:
-    cc = pd.read_json(dir_name_out+'/'+ii1, orient="records", lines=True)
-    data.append(cc)
-    cc = []
-Xyn_date = pd.concat(data)
-data = []
-Xyn_date.to_json(dir_name_out+'/'+file_name_first+file_name_last, orient="records", lines=True)
+# file_name_list = os.listdir(dir_name_out)
+# data = []
+# for ii1 in file_name_list:
+#     cc = pd.read_json(dir_name_out+'/'+ii1, orient="records", lines=True)
+#     data.append(cc)
+#     cc = []
+# Xyn_date = pd.concat(data)
+# data = []
+# Xyn_date.to_json(dir_name_out+'/'+file_name_first+file_name_last, orient="records", lines=True)
 ###################################################################
 xyn_time_end = time.time()
 xyn_minute, xyn_seconds = divmod(xyn_time_end - xyn_time_start, 60)
