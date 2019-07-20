@@ -9,6 +9,7 @@ import random
 import psutil
 
 
+
 xyn_time_start = time.time()
 ###################################################################
 # Xyn_memory = psutil.Process(os.getpid()).memory_full_info().uss / 1048576.
@@ -28,6 +29,11 @@ for count1, xyn_num in enumerate(file_name_list, start=0):
     if count1 == out_num:
         break
     os.rename(dir_name_out+'/'+file_name_first+str(count1)+file_name_last, dir_name_temp+'/'+xyn_num)
+
+os.rmdir(dir_name_out)
+os.rename(dir_name_temp, dir_name_out) # 重命名目录
+for ii in os.listdir(dir_name_out):
+    os.remove(dir_name_in+'/'+ii)
 ###################################################################
 xyn_time_end = time.time()
 xyn_minute, xyn_seconds = divmod(xyn_time_end - xyn_time_start, 60)

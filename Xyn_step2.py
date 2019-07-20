@@ -21,10 +21,39 @@ def xyn_io(kk):
 
 xyn_time_start = time.time()
 ###################################################################
+# dir_name_in = "./review-step2"
+# dir_name_out = "./review-step3"
+# file_name_list = os.listdir(dir_name_in)
+# file_name_first = file_name_list[0].split('.')[0]
+# file_name_last = '.json'
+# os.makedirs(dir_name_out)
+#
+# num = 50
+# Xyn_date = pd.read_json(dir_name_in+'/'+file_name_first+file_name_last, orient="records", lines=True, chunksize=1000)
+# data = []
+# for iii in Xyn_date:
+#     data.append(iii)
+# Xyn_date = pd.concat(data)
+# data = Xyn_date[['user_id']].drop_duplicates(keep='first')
+# rol = len(data['user_id'])//num
+# for iii in range(num):
+#     if iii == (num-1): cc = data[rol*iii:]
+#     else: cc = data[rol*iii:rol*(iii+1)]
+#     Xyn_date['new'] = Xyn_date['user_id'].isin(cc['user_id'])
+#     Xyn_date[Xyn_date.new == True][['date', 'review_id', 'text', 'user_id']].to_json(dir_name_in+'/'+file_name_first+str(iii)+file_name_last, orient="records", lines=True)
+#
+# file_name_list = os.listdir(dir_name_in)
+# file_name_list.remove(file_name_first+file_name_last)
+# Xyn_date = []
+# data = []
+# cc = []
+# print("File Segmentation Completion.")
+
 dir_name_in = "./review-step2"
 dir_name_out = "./review-step3"
 file_name_list = os.listdir(dir_name_in)
-os.makedirs(dir_name_out)
+if os.path.exists(dir_name_out) == False:
+    os.makedirs(dir_name_out)
 txt_error = []
 txt_right = []
 
