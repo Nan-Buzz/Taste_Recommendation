@@ -75,13 +75,13 @@ for count1, xyn_num in enumerate(file_name_list, start=0):
     else:
         txt_right.append(xyn_num)
     Xyn_date = []
+    with open("error.txt", "w", encoding='utf8') as f:
+        for i in txt_error:
+            f.write(i + '\n')
+    with open("right.txt", "w", encoding='utf8') as f:
+        for i in txt_right:
+            f.write(i + '\n')
 sys.stdout.flush()
-with open("error.txt", "w", encoding='utf8') as f:
-    for i in txt_error:
-        f.write(i + '\n')
-with open("right.txt", "w", encoding='utf8') as f:
-    for i in txt_right:
-        f.write(i + '\n')
 print("File processing completed.")
 ###################################################################
 xyn_time_end = time.time()
