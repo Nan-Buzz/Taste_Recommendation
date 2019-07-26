@@ -4,18 +4,12 @@ import os
 import pandas as pd
 
 def xyn_merge_step1(kk, hh):
-    cc = hh[hh['user_id'] == kk]
-    kong = []
-    for index, row in cc.iterrows():
-        kong.append(row["text_step1"])
-    return kong
+    cc = hh[hh['user_id'] == kk].sort_values(by='date', ascending=False)
+    return cc['text_step1'].values.tolist()
 
 def xyn_merge_step2(kk, hh):
-    cc = hh[hh['user_id'] == kk]
-    kong = []
-    for index, row in cc.iterrows():
-        kong.append(row["date"])
-    return kong
+    cc = hh[hh['user_id'] == kk].sort_values(by='date', ascending=False)
+    return cc['date'].values.tolist()
 
 xyn_time_start = time.time()
 ###################################################################
@@ -26,18 +20,12 @@ os.makedirs(dir_name_out)
 
 for count1, ii1 in enumerate(file_name_list, start=1):
     sys.stdout.write(f'\rcomplete percent:{count1:.0f}')
-    Xyn_date = pd.read_json(dir_name_in+'/'+ii1, orient="records", lines=True, chunksize=100)
-    data = []
-    for iii in Xyn_date:
-        data.append(iii)
-    iii = []
-    Xyn_date = pd.concat(data)
+    Xyn_date = pd.read_json(dir_name_in+'/'+ii1, orient="records", lines=True)
     data = Xyn_date[['user_id']].drop_duplicates(keep='first')
-
-    data["text_all"] = data.apply(lambda row: xyn_merge_step1(kk=row["user_id"], hh=Xyn_date), axis=1)
-    data["date_all"] = data.apply(lambda row: xyn_merge_step2(kk=row["user_id"], hh=Xyn_date), axis=1)
+    data["text_sort"] = data.apply(lambda row: xyn_merge_step1(kk=row["user_id"], hh=Xyn_date), axis=1)
+    data["date_sort"] = data.apply(lambda row: xyn_merge_step2(kk=row["user_id"], hh=Xyn_date), axis=1)
     Xyn_date = []
-    data[['user_id', 'text_all', 'date_all']].to_json(dir_name_out + '/' + ii1, orient="records", lines=True)
+    data[['user_id', 'text_sort', 'date_sort']].to_json(dir_name_out + '/' + ii1, orient="records", lines=True)
 
 sys.stdout.flush()
 ###################################################################

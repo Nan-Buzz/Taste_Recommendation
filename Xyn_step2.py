@@ -19,14 +19,47 @@ def xyn_io(kk):
     return text_temp
 
 
-xyn_time_start = time.time()
-###################################################################
+def xyn_all(ii1):
+    ii1["text_step1"] = ii1.apply(lambda row: xyn_io(kk=row["text"]), axis=1)
+    return ii1[['user_id', 'text_step1', 'date']]
+
+
+if __name__ == '__main__':
+    xyn_time_start = time.time()
+    ###################################################################
+    dir_name_in = "./review-step2"
+    dir_name_out = "./review-step3"
+    file_name_list = os.listdir(dir_name_in)
+    if os.path.exists(dir_name_out) == False:
+        os.makedirs(dir_name_out)
+
+    pool = mp.Pool(processes=6)
+    cc = pd.read_json(dir_name_in + '/' + file_name_list[0], orient="records", lines=True, chunksize=100)
+    data = pool.map(xyn_all, cc)
+    Xyn_date = pd.concat(data)
+    try:
+        Xyn_date.to_json(dir_name_out + '/' + file_name_list[0], orient="records", lines=True)
+    except:
+        print("Failed!!!")
+    else:
+        print("File processing completed.")
+    ###################################################################
+    xyn_time_end = time.time()
+    xyn_minute, xyn_seconds = divmod(xyn_time_end - xyn_time_start, 60)
+    xyn_hour, xyn_minute = divmod(xyn_minute, 60)
+    print(("%02d:%02d:%02d" % (xyn_hour, xyn_minute, xyn_seconds)))
+
+########################################################################################################################
+# xyn_time_start = time.time()
+# ###################################################################
 # dir_name_in = "./review-step2"
 # dir_name_out = "./review-step3"
 # file_name_list = os.listdir(dir_name_in)
 # file_name_first = file_name_list[0].split('.')[0]
 # file_name_last = '.json'
-# os.makedirs(dir_name_out)
+# if os.path.exists(dir_name_out) == False:
+#     os.makedirs(dir_name_out)
+#
 #
 # num = 50
 # Xyn_date = pd.read_json(dir_name_in+'/'+file_name_first+file_name_last, orient="records", lines=True, chunksize=1000)
@@ -48,43 +81,8 @@ xyn_time_start = time.time()
 # data = []
 # cc = []
 # print("File Segmentation Completion.")
-
-dir_name_in = "./review-step2"
-dir_name_out = "./review-step3"
-file_name_list = os.listdir(dir_name_in)
-if os.path.exists(dir_name_out) == False:
-    os.makedirs(dir_name_out)
-txt_error = []
-txt_right = []
-
-for count1, xyn_num in enumerate(file_name_list, start=0):
-    sys.stdout.write(f'\rcomplete percent:{count1:.0f}')
-    cc = pd.read_json(dir_name_in+'/'+xyn_num, orient="records", lines=True, chunksize=100)
-    data = []
-    for ii1 in cc:
-        ii1["text_step1"] = ii1.apply(lambda row: xyn_io(kk=row["text"]), axis=1)
-        data.append(ii1[['user_id', 'text_step1', 'date']])
-    cc = []
-    ii1 = []
-    Xyn_date = pd.concat(data)
-    data = []
-    try:
-        Xyn_date.to_json(dir_name_out+'/'+xyn_num, orient="records", lines=True)
-    except:
-        txt_error.append(xyn_num)
-    else:
-        txt_right.append(xyn_num)
-    Xyn_date = []
-    with open("error.txt", "w", encoding='utf8') as f:
-        for i in txt_error:
-            f.write(i + '\n')
-    with open("right.txt", "w", encoding='utf8') as f:
-        for i in txt_right:
-            f.write(i + '\n')
-sys.stdout.flush()
-print("File processing completed.")
-###################################################################
-xyn_time_end = time.time()
-xyn_minute, xyn_seconds = divmod(xyn_time_end - xyn_time_start, 60)
-xyn_hour, xyn_minute = divmod(xyn_minute, 60)
-print("%02d:%02d:%02d" % (xyn_hour, xyn_minute, xyn_seconds))
+# ###################################################################
+# xyn_time_end = time.time()
+# xyn_minute, xyn_seconds = divmod(xyn_time_end - xyn_time_start, 60)
+# xyn_hour, xyn_minute = divmod(xyn_minute, 60)
+# print("%02d:%02d:%02d" % (xyn_hour, xyn_minute, xyn_seconds))
